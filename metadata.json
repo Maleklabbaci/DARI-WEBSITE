@@ -1,0 +1,7 @@
+{
+  "name": "Dari - Immobilier Algérie",
+  "description": "Plateforme immobilière leader en Algérie pour l'achat, la vente et la location de biens immobiliers avec gestion de solde en DA.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
