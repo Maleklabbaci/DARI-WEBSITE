@@ -1,11 +1,13 @@
 
 import React from 'react';
 import { Search, HelpCircle, Wallet, List, ShieldCheck } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 export const Help: React.FC = () => {
+  const { t } = useLanguage();
   const categories = [
     { 
-      title: "Compte & inscription", 
+      title: t('help.catAccount'), 
       icon: <HelpCircle className="text-blue-600" />,
       faqs: [
         { q: "Comment créer un compte ?", a: "Cliquez sur 'S'inscrire', remplissez le formulaire et validez. Vous recevrez 1 000 DA de solde de bienvenue." },
@@ -13,7 +15,7 @@ export const Help: React.FC = () => {
       ]
     },
     { 
-      title: "Solde & paiements", 
+      title: t('help.catWallet'), 
       icon: <Wallet className="text-green-600" />,
       faqs: [
         { q: "Qu'est-ce que le solde Dari ?", a: "C'est un portefeuille en DZD dans votre compte, que vous pouvez utiliser pour payer des mises en avant, débloquer des numéros ou souscrire un abonnement." },
@@ -22,7 +24,7 @@ export const Help: React.FC = () => {
       ]
     },
     { 
-      title: "Annonces", 
+      title: t('help.catAds'), 
       icon: <List className="text-purple-600" />,
       faqs: [
         { q: "Comment déposer une annonce ?", a: "Depuis votre tableau de bord, cliquez sur 'Déposer une annonce' et suivez les étapes." },
@@ -30,7 +32,7 @@ export const Help: React.FC = () => {
       ]
     },
     { 
-      title: "Sécurité", 
+      title: t('help.catSafety'), 
       icon: <ShieldCheck className="text-orange-600" />,
       faqs: [
         { q: "Comment éviter les arnaques ?", a: "Ne payez jamais avant d'avoir visité le bien et vérifié les documents. Utilisez la messagerie Dari pour garder une trace des échanges." },
@@ -40,12 +42,12 @@ export const Help: React.FC = () => {
   ];
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-24">
+    <div className="bg-slate-50 min-h-screen pb-24 text-start">
       <div className="bg-blue-600 pt-24 pb-32 px-4 text-center">
-        <h1 className="text-4xl font-bold text-white mb-6">Aide & Questions fréquentes</h1>
+        <h1 className="text-4xl font-bold text-white mb-6 tracking-tight">{t('header.help')}</h1>
         <div className="max-w-xl mx-auto relative">
-          <Search className="absolute left-4 top-4 text-slate-400" />
-          <input type="text" placeholder="Comment pouvons-nous vous aider ?" className="w-full pl-12 pr-6 py-4 rounded-2xl bg-white shadow-xl outline-none focus:ring-2 focus:ring-blue-400" />
+          <Search className="absolute start-4 top-4 text-slate-400" />
+          <input type="text" placeholder={t('help.searchPlaceholder')} className="w-full ps-12 pe-6 py-4 rounded-2xl bg-white shadow-xl outline-none focus:ring-2 focus:ring-blue-400" />
         </div>
       </div>
 
@@ -53,7 +55,7 @@ export const Help: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {categories.map((cat, i) => (
             <div key={i} className="bg-white p-8 rounded-[2rem] shadow-sm border border-slate-100">
-              <div className="flex items-center space-x-3 mb-8">
+              <div className="flex items-center space-x-3 rtl:space-x-reverse mb-8">
                 <div className="p-3 bg-slate-50 rounded-xl">{cat.icon}</div>
                 <h2 className="text-xl font-bold">{cat.title}</h2>
               </div>

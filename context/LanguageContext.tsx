@@ -6,7 +6,7 @@ import { translations } from '../translations';
 interface LanguageContextType {
   language: Language;
   setLanguage: (lang: Language) => void;
-  t: (key: string) => any;
+  t: (key: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -15,7 +15,6 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [language, setLanguageState] = useState<Language>('fr');
 
   useEffect(() => {
-    // Sync initial state with document
     const savedLang = localStorage.getItem('dari_lang') as Language;
     if (savedLang && ['fr', 'ar', 'en'].includes(savedLang)) {
       setLanguage(savedLang);
@@ -25,27 +24,38 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
     localStorage.setItem('dari_lang', lang);
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    // Update HTML attributes for global CSS/Accessibility
     document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
   };
 
-  /**
-   * Retourne la valeur associée à un chemin de clé (ex: "pricing.freeFeatures")
-   * Peut retourner une chaîne, un tableau ou un objet selon le dictionnaire.
-   */
-  const t = (path: string): any => {
+  const t = (path: string): string => {
     const keys = path.split('.');
-    let result = translations[language];
     
-    for (const key of keys) {
-      if (result && result[key] !== undefined) {
-        result = result[key];
-      } else {
-        return path;
+    const getNestedValue = (obj: any, keyList: string[]) => {
+      let current = obj;
+      for (const key of keyList) {
+        if (current && current[key]) {
+          current = current[key];
+        } else {
+          return null;
+        }
       }
+      return current;
+    };
+
+    // 1. Try current language
+    const value = getNestedValue(translations[language], keys);
+    if (value && typeof value === 'string') return value;
+
+    // 2. Fallback to French if missing
+    if (language !== 'fr') {
+      const fallbackValue = getNestedValue(translations['fr'], keys);
+      if (fallbackValue && typeof fallbackValue === 'string') return fallbackValue;
     }
-    
-    return result;
+
+    // 3. Return the key itself as a last resort to debug
+    return path;
   };
 
   return (

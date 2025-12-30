@@ -1,6 +1,6 @@
 
 import React, { useEffect } from 'react';
-import { HashRouter as Router, Routes, Route, Navigate, useLocation, useParams, useNavigate } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
 import { Search } from './pages/Search';
@@ -26,32 +26,11 @@ import { About } from './pages/About';
 import { Partners } from './pages/Partners';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
-import { Language } from './types';
-import { Loader2, CheckCircle2, LogIn, LogOut, UserPlus } from 'lucide-react';
+import { CheckCircle2, LogIn, LogOut, UserPlus } from 'lucide-react';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
   useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
-  return null;
-};
-
-// Sync context language with URL segment
-const LanguageSync = () => {
-  const { lang } = useParams<{ lang: Language }>();
-  const { setLanguage, language } = useLanguage();
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  useEffect(() => {
-    if (lang && ['fr', 'ar', 'en'].includes(lang)) {
-      if (lang !== language) setLanguage(lang);
-    } else {
-      const defaultLang = localStorage.getItem('dari_lang') || 'fr';
-      const cleanPath = location.pathname === '/' ? '' : location.pathname;
-      navigate(`/${defaultLang}${cleanPath}`, { replace: true });
-    }
-  }, [lang, language, setLanguage, navigate, location.pathname]);
-
   return null;
 };
 
@@ -92,51 +71,52 @@ const AuthTransitionOverlay = () => {
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAuth();
-  const { language } = useLanguage();
-  if (isLoading) return <div className="h-screen flex items-center justify-center">...</div>;
-  if (!isAuthenticated) return <Navigate to={`/${language}/login`} />;
+  if (isLoading) return null;
+  if (!isAuthenticated) return <Navigate to="/login" />;
   return <>{children}</>;
 };
 
-const LanguageRoutes = () => {
+const AppContent: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
-  
-  return (
-    <Layout isAuthenticated={isAuthenticated} user={user} onLogout={logout}>
-      <ScrollToTop />
-      <LanguageSync />
-      <AuthTransitionOverlay />
-      <Routes>
-        <Route index element={<Home />} />
-        <Route path="search" element={<Search />} />
-        <Route path="property/:id" element={<ListingDetail />} />
-        <Route path="pricing" element={<Pricing />} />
-        <Route path="help" element={<Help />} />
-        <Route path="contact" element={<Contact />} />
-        <Route path="about" element={<About />} />
-        <Route path="partners" element={<Partners />} />
-        <Route path="legal" element={<Legal />} />
-        <Route path="terms" element={<Terms />} />
-        <Route path="privacy" element={<Privacy />} />
-        
-        {/* Auth */}
-        <Route path="login" element={<Login />} />
-        <Route path="signup" element={<Signup />} />
-        <Route path="forgot-password" element={<ForgotPassword />} />
+  const { language } = useLanguage();
 
-        {/* Dashboard */}
-        <Route path="dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        <Route path="dashboard/ads" element={<ProtectedRoute><DashboardAds /></ProtectedRoute>} />
-        <Route path="dashboard/profile" element={<ProtectedRoute><DashboardProfile /></ProtectedRoute>} />
-        <Route path="dashboard/balance" element={<ProtectedRoute><DashboardBalance /></ProtectedRoute>} />
-        <Route path="dashboard/messages" element={<ProtectedRoute><DashboardMessages /></ProtectedRoute>} />
-        <Route path="dashboard/subscription" element={<ProtectedRoute><DashboardSubscription /></ProtectedRoute>} />
-        <Route path="dashboard/analytics" element={<ProtectedRoute><DashboardAnalytics /></ProtectedRoute>} />
-        <Route path="dashboard/favorites" element={<ProtectedRoute><DashboardFavorites /></ProtectedRoute>} />
-        <Route path="dashboard/alerts" element={<ProtectedRoute><DashboardAlerts /></ProtectedRoute>} />
-        <Route path="create-listing" element={<ProtectedRoute><CreateListing /></ProtectedRoute>} />
-      </Routes>
-    </Layout>
+  return (
+    <div dir={language === 'ar' ? 'rtl' : 'ltr'}>
+      <Layout isAuthenticated={isAuthenticated} user={user} onLogout={logout}>
+        <ScrollToTop />
+        <AuthTransitionOverlay />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/property/:id" element={<ListingDetail />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/legal" element={<Legal />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/partners" element={<Partners />} />
+          
+          <Route path="/login" element={!isAuthenticated ? <Login /> : <Navigate to="/dashboard" />} />
+          <Route path="/signup" element={!isAuthenticated ? <Signup /> : <Navigate to="/dashboard" />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/dashboard/ads" element={<ProtectedRoute><DashboardAds /></ProtectedRoute>} />
+          <Route path="/dashboard/favorites" element={<ProtectedRoute><DashboardFavorites /></ProtectedRoute>} />
+          <Route path="/dashboard/alerts" element={<ProtectedRoute><DashboardAlerts /></ProtectedRoute>} />
+          <Route path="/dashboard/balance" element={<ProtectedRoute><DashboardBalance /></ProtectedRoute>} />
+          <Route path="/dashboard/messages" element={<ProtectedRoute><DashboardMessages /></ProtectedRoute>} />
+          <Route path="/dashboard/profile" element={<ProtectedRoute><DashboardProfile /></ProtectedRoute>} />
+          <Route path="/dashboard/subscription" element={<ProtectedRoute><DashboardSubscription /></ProtectedRoute>} />
+          <Route path="/dashboard/analytics" element={<ProtectedRoute><DashboardAnalytics /></ProtectedRoute>} />
+          
+          <Route path="/create-listing" element={<ProtectedRoute><CreateListing /></ProtectedRoute>} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Layout>
+    </div>
   );
 };
 
@@ -145,10 +125,7 @@ const App: React.FC = () => {
     <LanguageProvider>
       <AuthProvider>
         <Router>
-          <Routes>
-            <Route path="/:lang/*" element={<LanguageRoutes />} />
-            <Route path="*" element={<Navigate to="/fr" replace />} />
-          </Routes>
+          <AppContent />
         </Router>
       </AuthProvider>
     </LanguageProvider>

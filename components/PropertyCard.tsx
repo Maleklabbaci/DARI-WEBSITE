@@ -14,7 +14,7 @@ interface PropertyCardProps {
 
 export const PropertyCard: React.FC<PropertyCardProps> = ({ property, className = "" }) => {
   const { toggleFavorite, isFavorite, isAuthenticated } = useAuth();
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
 
   const handleFavoriteClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -27,7 +27,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, className 
 
   return (
     <div className={`bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden hover:shadow-2xl hover:-translate-y-1 transition-all duration-500 group flex flex-col ${className}`}>
-      <Link to={`/${language}/property/${property.id}`} className="block relative h-64 overflow-hidden">
+      <Link to={`/property/${property.id}`} className="block relative h-64 overflow-hidden">
         <img 
           src={property.images[0]} 
           alt={property.title}
@@ -35,11 +35,11 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, className 
         />
         <div className="absolute top-4 start-4 flex flex-wrap gap-2">
           <span className="bg-white/95 backdrop-blur-md text-blue-600 text-[10px] font-black uppercase px-3 py-1.5 rounded-xl shadow-sm tracking-widest">
-            {property.transaction === 'buy' ? 'À vendre' : 'À louer'}
+            {property.transaction === 'buy' ? t('header.buy') : t('header.rent')}
           </span>
           {property.isBoosted && (
             <span className="bg-orange-500 text-white text-[10px] font-black uppercase px-3 py-1.5 rounded-xl shadow-sm tracking-widest animate-pulse">
-              Boosté
+              {t('dashboard.status.active')}
             </span>
           )}
         </div>
@@ -58,7 +58,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, className 
         <div className="absolute bottom-4 start-4">
           <div className="bg-slate-900/90 backdrop-blur-xl text-white px-5 py-2.5 rounded-[1.25rem] shadow-2xl border border-white/10">
             <span className="text-xl font-black">{property.price.toLocaleString(language === 'ar' ? 'ar-DZ' : 'fr-DZ')}</span>
-            <span className="text-sm font-bold ms-1">DA</span>
+            <span className="text-sm font-bold ms-1">{t('common.da')}</span>
           </div>
         </div>
       </Link>
@@ -75,7 +75,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, className 
           </div>
         </div>
         
-        <Link to={`/${language}/property/${property.id}`} className="block group/title mb-6">
+        <Link to={`/property/${property.id}`} className="block group/title mb-6">
           <h3 className="text-xl font-black text-slate-800 group-hover/title:text-blue-600 transition-colors leading-tight line-clamp-2">
             {property.title}
           </h3>
@@ -85,7 +85,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, className 
           <div className="flex items-center gap-5 text-slate-500">
             <div className="flex items-center font-bold text-xs">
               <Building size={16} className="me-2 text-slate-300" />
-              {property.rooms || '-'} <span className="ms-1">p.</span>
+              {property.rooms || '-'} <span className="ms-1">{t('common.roomsUnit')}</span>
             </div>
             <div className="flex items-center font-bold text-xs">
               <Ruler size={16} className="me-2 text-slate-300" />
@@ -93,7 +93,7 @@ export const PropertyCard: React.FC<PropertyCardProps> = ({ property, className 
             </div>
           </div>
           <Link 
-            to={`/${language}/property/${property.id}`} 
+            to={`/property/${property.id}`} 
             className="w-10 h-10 bg-slate-50 text-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 group/btn"
           >
             <ChevronRight size={20} className="rtl:rotate-180 group-hover/btn:translate-x-0.5 rtl:group-hover/btn:-translate-x-0.5 transition-transform" />

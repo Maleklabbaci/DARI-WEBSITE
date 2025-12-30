@@ -1,15 +1,16 @@
 
 import React, { useState } from 'react';
-/* Fix: Import Link from react-router-dom */
 import { Link } from 'react-router-dom';
 import { Bell, Plus, Trash2, MapPin, Search, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { DashboardSidebar } from '../../components/DashboardSidebar';
 import { WILAYAS, PROPERTY_TYPES } from '../../constants';
 import { PropertyType, TransactionType } from '../../types';
 
 export const DashboardAlerts: React.FC = () => {
   const { user, addAlert, toggleAlert, removeAlert } = useAuth();
+  const { t } = useLanguage();
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     wilaya: '',
@@ -31,22 +32,22 @@ export const DashboardAlerts: React.FC = () => {
   const alerts = user?.alerts || [];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-start">
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <DashboardSidebar />
 
         <div className="lg:col-span-3 space-y-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
-               <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">Mes alertes</h1>
-               <p className="text-sm font-medium text-slate-500 mt-1">Soyez prévenu dès qu'un bien correspondant à vos critères est publié.</p>
+               <h1 className="text-3xl font-black text-slate-900 tracking-tight uppercase">{t('dashboard.menu.alerts')}</h1>
+               <p className="text-sm font-medium text-slate-500 mt-1">{t('dashboard.alerts.desc')}</p>
             </div>
             {!showForm && (
               <button 
                 onClick={() => setShowForm(true)}
                 className="flex items-center bg-blue-600 text-white px-8 py-4 rounded-2xl font-black shadow-xl shadow-blue-100 hover:bg-blue-700 transition active:scale-95"
               >
-                <Plus size={20} className="mr-3" /> Créer une alerte
+                <Plus size={20} className="me-3" /> {t('dashboard.alerts.create')}
               </button>
             )}
           </div>
@@ -54,48 +55,48 @@ export const DashboardAlerts: React.FC = () => {
           {showForm && (
             <div className="bg-white p-10 rounded-[2.5rem] border-2 border-blue-50 shadow-2xl animate-in slide-in-from-top-4 duration-500">
               <h2 className="text-xl font-black mb-8 text-slate-900 uppercase tracking-tight flex items-center">
-                <Bell size={24} className="mr-3 text-blue-600" /> Nouvelle alerte
+                <Bell size={24} className="me-3 text-blue-600" /> {t('dashboard.alerts.new')}
               </h2>
               <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Transaction</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('home.searchTransaction')}</label>
                   <div className="grid grid-cols-2 gap-2">
-                    {['buy', 'rent'].map((t) => (
+                    {['buy', 'rent'].map((tr) => (
                       <button
-                        key={t}
+                        key={tr}
                         type="button"
-                        onClick={() => setFormData({ ...formData, transaction: t as TransactionType })}
-                        className={`py-3.5 rounded-xl border-2 transition-all font-bold text-xs uppercase ${formData.transaction === t ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-md' : 'border-slate-100 text-slate-400 hover:border-blue-100'}`}
+                        onClick={() => setFormData({ ...formData, transaction: tr as TransactionType })}
+                        className={`py-3.5 rounded-xl border-2 transition-all font-bold text-xs uppercase ${formData.transaction === tr ? 'border-blue-600 bg-blue-50 text-blue-700 shadow-md' : 'border-slate-100 text-slate-400 hover:border-blue-100'}`}
                       >
-                        {t === 'buy' ? 'Achat' : 'Location'}
+                        {tr === 'buy' ? t('header.buy') : t('header.rent')}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Wilaya</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('common.wilaya')}</label>
                   <select 
                     required
                     value={formData.wilaya}
                     onChange={(e) => setFormData({ ...formData, wilaya: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm font-bold outline-none focus:ring-4 focus:ring-blue-50 transition"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm font-bold outline-none focus:ring-4 focus:ring-blue-50 transition appearance-none"
                   >
-                    <option value="">Sélectionner une wilaya</option>
+                    <option value="">--</option>
                     {WILAYAS.map(w => <option key={w} value={w}>{w}</option>)}
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Type de bien</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('home.searchProperty')}</label>
                   <select 
                     value={formData.type}
                     onChange={(e) => setFormData({ ...formData, type: e.target.value as PropertyType })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm font-bold outline-none focus:ring-4 focus:ring-blue-50 transition"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm font-bold outline-none focus:ring-4 focus:ring-blue-50 transition appearance-none"
                   >
                     {PROPERTY_TYPES.map(pt => <option key={pt.value} value={pt.value}>{pt.label}</option>)}
                   </select>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Budget Max (DA)</label>
+                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{t('search.max')} ({t('common.da')})</label>
                   <input 
                     type="number"
                     placeholder="Ex: 50.000.000"
@@ -104,19 +105,19 @@ export const DashboardAlerts: React.FC = () => {
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-sm font-bold outline-none focus:ring-4 focus:ring-blue-50 transition"
                   />
                 </div>
-                <div className="md:col-span-2 flex items-center justify-end space-x-4 pt-6">
+                <div className="md:col-span-2 flex items-center justify-end space-x-4 rtl:space-x-reverse pt-6">
                   <button 
                     type="button"
                     onClick={() => setShowForm(false)}
                     className="px-8 py-3.5 text-sm font-bold text-slate-500 hover:text-slate-800 transition"
                   >
-                    Annuler
+                    {t('common.cancel')}
                   </button>
                   <button 
                     type="submit"
                     className="px-12 py-3.5 bg-blue-600 text-white font-black rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-100 active:scale-95"
                   >
-                    Enregistrer l'alerte
+                    {t('common.save')}
                   </button>
                 </div>
               </form>
@@ -128,14 +129,14 @@ export const DashboardAlerts: React.FC = () => {
               <div className="w-24 h-24 bg-slate-50 rounded-[2rem] flex items-center justify-center mx-auto mb-10 text-slate-200">
                 <Bell size={48} />
               </div>
-              <h3 className="text-2xl font-black mb-4 text-slate-900">Aucune alerte configurée</h3>
-              <p className="text-slate-500 mb-12 max-w-sm mx-auto font-medium leading-relaxed">Soyez le premier sur les bonnes affaires. Configurez une alerte pour recevoir des notifications par email dès qu'un bien vous correspond.</p>
+              <h3 className="text-2xl font-black mb-4 text-slate-900">{t('dashboard.alerts.empty')}</h3>
+              <p className="text-slate-500 mb-12 max-w-sm mx-auto font-medium leading-relaxed">{t('dashboard.alerts.emptyDesc')}</p>
               {!showForm && (
                 <button 
                   onClick={() => setShowForm(true)}
                   className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-black hover:bg-blue-700 transition shadow-2xl shadow-blue-100 active:scale-95"
                 >
-                  Démarrer maintenant
+                  {t('dashboard.alerts.start')}
                 </button>
               )}
             </div>
@@ -146,34 +147,34 @@ export const DashboardAlerts: React.FC = () => {
                   key={alert.id} 
                   className="bg-white rounded-[2rem] p-8 border border-slate-100 shadow-xl shadow-slate-100/30 flex flex-col md:flex-row md:items-center justify-between gap-8 group hover:border-blue-100 transition-all duration-300"
                 >
-                  <div className="flex items-start space-x-6">
+                  <div className="flex items-start space-x-6 rtl:space-x-reverse">
                     <div className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-inner ${alert.isActive ? 'bg-blue-50 text-blue-600' : 'bg-slate-50 text-slate-300'}`}>
                       <Bell size={24} className={alert.isActive ? 'animate-bounce' : ''} />
                     </div>
-                    <div>
-                      <div className="flex items-center space-x-3 mb-2">
+                    <div className="text-start">
+                      <div className="flex items-center space-x-3 rtl:space-x-reverse mb-2">
                         <span className="text-[10px] font-black uppercase tracking-widest text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg">
-                          {alert.transaction === 'buy' ? 'Achat' : 'Location'}
+                          {alert.transaction === 'buy' ? t('header.buy') : t('header.rent')}
                         </span>
                         <h3 className="text-lg font-black text-slate-900">
-                          {PROPERTY_TYPES.find(t => t.value === alert.type)?.label} à {alert.wilaya}
+                          {PROPERTY_TYPES.find(v => v.value === alert.type)?.label} {t('search.at')} {alert.wilaya}
                         </h3>
                       </div>
                       <div className="flex flex-wrap gap-6 text-slate-500">
                         <div className="flex items-center text-xs font-bold uppercase tracking-wide">
-                          <MapPin size={14} className="mr-1.5 text-slate-300" /> {alert.wilaya}
+                          <MapPin size={14} className="me-1.5 text-slate-300" /> {alert.wilaya}
                         </div>
                         {alert.priceMax && (
                           <div className="flex items-center text-xs font-bold uppercase tracking-wide">
-                             Budget Max : <span className="ml-1.5 text-slate-900">{alert.priceMax.toLocaleString()} DA</span>
+                             {t('search.max')} : <span className="ms-1.5 text-slate-900">{alert.priceMax.toLocaleString()} {t('common.da')}</span>
                           </div>
                         )}
                       </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-4 ml-auto">
-                    <div className="flex items-center mr-4">
+                  <div className="flex items-center space-x-4 ms-auto rtl:space-x-reverse">
+                    <div className="flex items-center me-4">
                        <label className="relative inline-flex items-center cursor-pointer">
                         <input 
                           type="checkbox" 
@@ -181,9 +182,9 @@ export const DashboardAlerts: React.FC = () => {
                           checked={alert.isActive}
                           onChange={() => toggleAlert(alert.id)}
                         />
-                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                        <span className="ml-3 text-[10px] font-black uppercase tracking-widest text-slate-400 peer-checked:text-blue-600 transition-colors">
-                          {alert.isActive ? 'Active' : 'Pause'}
+                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        <span className="ms-3 text-[10px] font-black uppercase tracking-widest text-slate-400 peer-checked:text-blue-600 transition-colors">
+                          {alert.isActive ? t('common.active') : t('common.paused')}
                         </span>
                       </label>
                     </div>
@@ -198,22 +199,22 @@ export const DashboardAlerts: React.FC = () => {
               ))}
               
               <div className="bg-slate-900 rounded-[2.5rem] p-10 text-white relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-600 opacity-20 blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+                <div className="absolute top-0 end-0 w-64 h-64 bg-blue-600 opacity-20 blur-3xl -translate-y-1/2 translate-x-1/2"></div>
                 <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-                  <div className="flex items-center space-x-6">
+                  <div className="flex items-center space-x-6 rtl:space-x-reverse">
                     <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-blue-400 shadow-inner backdrop-blur-md">
                       <CheckCircle2 size={32} />
                     </div>
-                    <div>
-                      <h4 className="text-xl font-black mb-1">Optimisez votre recherche</h4>
-                      <p className="text-sm text-slate-400 font-medium">L'algorithme Dari analyse les nouvelles annonces 24h/24 pour vous.</p>
+                    <div className="text-start">
+                      <h4 className="text-xl font-black mb-1">{t('dashboard.alerts.promoTitle')}</h4>
+                      <p className="text-sm text-slate-400 font-medium">{t('dashboard.alerts.promoDesc')}</p>
                     </div>
                   </div>
                   <Link 
                     to="/search" 
                     className="px-10 py-4 bg-blue-600 text-white font-black rounded-xl hover:bg-blue-700 transition shadow-xl shadow-blue-900/40 active:scale-95 text-sm uppercase tracking-widest"
                   >
-                    Explorer maintenant
+                    {t('dashboard.alerts.promoBtn')}
                   </Link>
                 </div>
               </div>

@@ -1,5 +1,7 @@
 
 export type UserType = 'individual' | 'agency';
+
+// Fix: Added missing Language type export used for UI translations across the app
 export type Language = 'fr' | 'ar' | 'en';
 
 export interface Alert {
@@ -21,16 +23,18 @@ export interface User {
   subscription: 'free' | 'premium' | 'ultime';
   favorites?: string[];
   alerts?: Alert[];
+  // Nouveaux champs de profil
   whatsapp?: string;
   city?: string;
   wilaya?: string;
   isVerified?: boolean;
-  language?: Language | 'both';
+  language?: 'fr' | 'ar' | 'both';
   notifications?: {
     email: boolean;
     sms: boolean;
     news: boolean;
   };
+  // Champs spécifiques Agence
   agencyName?: string;
   agencyPhone?: string;
   agencyWhatsapp?: string;
