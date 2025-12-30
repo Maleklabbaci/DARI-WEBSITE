@@ -16,6 +16,8 @@ import { DashboardMessages } from './pages/dashboard/DashboardMessages';
 import { DashboardProfile } from './pages/dashboard/DashboardProfile';
 import { DashboardSubscription } from './pages/dashboard/DashboardSubscription';
 import { DashboardAnalytics } from './pages/dashboard/DashboardAnalytics';
+import { DashboardFavorites } from './pages/dashboard/DashboardFavorites';
+import { DashboardAlerts } from './pages/dashboard/DashboardAlerts';
 import { Pricing } from './pages/Pricing';
 import { Help } from './pages/Help';
 import { Contact } from './pages/Contact';
@@ -74,6 +76,8 @@ const AuthRoutes: React.FC = () => {
           {/* Protected Dashboard Routes */}
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/dashboard/ads" element={<ProtectedRoute><DashboardAds /></ProtectedRoute>} />
+          <Route path="/dashboard/favorites" element={<ProtectedRoute><DashboardFavorites /></ProtectedRoute>} />
+          <Route path="/dashboard/alerts" element={<ProtectedRoute><DashboardAlerts /></ProtectedRoute>} />
           <Route path="/dashboard/balance" element={<ProtectedRoute><DashboardBalance /></ProtectedRoute>} />
           <Route path="/dashboard/messages" element={<ProtectedRoute><DashboardMessages /></ProtectedRoute>} />
           <Route path="/dashboard/profile" element={<ProtectedRoute><DashboardProfile /></ProtectedRoute>} />

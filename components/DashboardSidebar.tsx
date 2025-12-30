@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, List, BarChart3, Wallet, MessageSquare, CreditCard, User, LogOut } from 'lucide-react';
+import { LayoutDashboard, List, BarChart3, Wallet, MessageSquare, CreditCard, User, LogOut, Heart, Bell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface SidebarItemProps {
@@ -40,6 +40,8 @@ export const DashboardSidebar: React.FC = () => {
   const menuItems = [
     { icon: <LayoutDashboard size={20} />, label: "Tableau de bord", path: "/dashboard" },
     { icon: <List size={20} />, label: "Mes annonces", path: "/dashboard/ads" },
+    { icon: <Heart size={20} />, label: "Mes favoris", path: "/dashboard/favorites" },
+    { icon: <Bell size={20} />, label: "Mes alertes", path: "/dashboard/alerts" },
     { icon: <BarChart3 size={20} />, label: "Analyses", path: "/dashboard/analytics" },
     { icon: <Wallet size={20} />, label: "Mon solde", path: "/dashboard/balance" },
     { icon: <MessageSquare size={20} />, label: "Messagerie", path: "/dashboard/messages" },
@@ -50,7 +52,6 @@ export const DashboardSidebar: React.FC = () => {
   return (
     <aside className="lg:col-span-1 space-y-6">
       <div className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-xl shadow-slate-100/50 sticky top-24">
-        {/* Profile Summary in Sidebar for Dashboard Main only shows name, here we keep it consistent */}
         <div className="flex flex-col items-center text-center mb-8 pb-8 border-b border-slate-50">
           <div className="w-20 h-20 rounded-3xl bg-blue-600 flex items-center justify-center text-white text-2xl font-black shadow-lg mb-4">
             {user.name.charAt(0)}

@@ -2,8 +2,9 @@
 import React, { useState } from 'react';
 import { Search, MapPin, Building, Key, Map, CheckCircle, ArrowRight, Wallet, Store, Briefcase, UserPlus, SearchCheck, MessageCircle, Heart, Star, TrendingUp, PlusCircle } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
-import { WILAYAS, PROPERTY_TYPES } from '../constants';
+import { WILAYAS, PROPERTY_TYPES, MOCK_PROPERTIES } from '../constants';
 import { useAuth } from '../context/AuthContext';
+import { PropertyCard } from '../components/PropertyCard';
 
 export const Home: React.FC = () => {
   const navigate = useNavigate();
@@ -55,14 +56,14 @@ export const Home: React.FC = () => {
         </div>
 
         {/* Search Bar Overlay */}
-        <div className="max-w-5xl mx-auto mt-16 transform translate-y-12">
-          <form onSubmit={handleSearch} className="bg-white p-4 md:p-6 rounded-2xl shadow-2xl grid grid-cols-1 md:grid-cols-4 gap-4 border border-slate-100">
+        <div className="max-w-5xl mx-auto mt-16 transform translate-y-12 px-4">
+          <form onSubmit={handleSearch} className="bg-white p-4 md:p-6 rounded-[2.5rem] shadow-2xl grid grid-cols-1 md:grid-cols-4 gap-4 border border-slate-100">
             <div className="relative">
-              <label className="block text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">Localisation</label>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-2 ml-1">Localisation</label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-3 text-slate-400" size={18} />
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-600" size={18} />
                 <select 
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition"
+                  className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-blue-50 outline-none transition appearance-none"
                   value={search.wilaya}
                   onChange={e => setSearch({...search, wilaya: e.target.value})}
                 >
@@ -73,11 +74,11 @@ export const Home: React.FC = () => {
             </div>
             
             <div className="relative">
-              <label className="block text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">Transaction</label>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-2 ml-1">Transaction</label>
               <div className="relative">
-                <Key className="absolute left-3 top-3 text-slate-400" size={18} />
+                <Key className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-600" size={18} />
                 <select 
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition"
+                  className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-blue-50 outline-none transition appearance-none"
                   value={search.transaction}
                   onChange={e => setSearch({...search, transaction: e.target.value})}
                 >
@@ -88,11 +89,11 @@ export const Home: React.FC = () => {
             </div>
 
             <div className="relative">
-              <label className="block text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-1">Bien</label>
+              <label className="block text-[10px] uppercase tracking-wider font-bold text-slate-400 mb-2 ml-1">Bien</label>
               <div className="relative">
-                <Building className="absolute left-3 top-3 text-slate-400" size={18} />
+                <Building className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-600" size={18} />
                 <select 
-                  className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 outline-none transition"
+                  className="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl text-sm font-bold focus:ring-4 focus:ring-blue-50 outline-none transition appearance-none"
                   value={search.type}
                   onChange={e => setSearch({...search, type: e.target.value})}
                 >
@@ -102,15 +103,37 @@ export const Home: React.FC = () => {
               </div>
             </div>
 
-            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg py-3 flex items-center justify-center transition shadow-lg active:scale-95">
-              <Search className="mr-2" size={20} /> Rechercher
-            </button>
+            <div className="flex items-end">
+              <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl py-4 flex items-center justify-center transition shadow-xl shadow-blue-100 active:scale-95">
+                <Search className="mr-2" size={20} /> Rechercher
+              </button>
+            </div>
           </form>
         </div>
       </section>
 
+      {/* Featured Listings */}
+      <section className="pt-48 pb-24 px-4 bg-slate-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-6">
+            <div className="max-w-xl">
+              <h2 className="text-3xl font-black mb-4 text-slate-900 uppercase tracking-tight leading-tight">Dernières opportunités immobilières</h2>
+              <p className="text-slate-500 font-medium">Découvrez les annonces les plus récentes partout en Algérie.</p>
+            </div>
+            <Link to="/search" className="text-blue-600 font-black text-sm uppercase tracking-widest flex items-center hover:translate-x-1 transition-transform group">
+              Voir tout <ArrowRight size={18} className="ml-2" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {MOCK_PROPERTIES.map(p => (
+              <PropertyCard key={p.id} property={p} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Categories Section */}
-      <section className="pt-40 pb-24 px-4 bg-white">
+      <section className="py-24 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-black mb-4 text-slate-900 uppercase tracking-tight">Tous vos biens immobiliers au même endroit</h2>
@@ -119,21 +142,20 @@ export const Home: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { title: 'Logements', desc: 'Appartements, maisons, studios, villas, duplex…', icon: <Key />, color: 'bg-blue-600' },
-              { title: 'Commerces & Activités', desc: 'Locaux commerciaux, boutiques, restaurants, cafés, entrepôts…', icon: <Store />, color: 'bg-green-600' },
-              { title: 'Bureaux & Professionnel', desc: 'Plateaux de bureaux, espaces de coworking, cabinets…', icon: <Briefcase />, color: 'bg-purple-600' },
-              { title: 'Terrains', desc: 'Terrains constructibles, agricoles, lots pour promotion immobilière…', icon: <Map />, color: 'bg-orange-600' }
+              { title: 'Logements', desc: 'Appartements, maisons, studios, villas, duplex…', icon: <Key />, color: 'bg-blue-600', path: '/search?p=apartment' },
+              { title: 'Commerces & Activités', desc: 'Locaux commerciaux, boutiques, restaurants, cafés, entrepôts…', icon: <Store />, color: 'bg-green-600', path: '/search?p=commercial' },
+              { title: 'Bureaux & Professionnel', desc: 'Plateaux de bureaux, espaces de coworking, cabinets…', icon: <Briefcase />, color: 'bg-purple-600', path: '/search?p=office' },
+              { title: 'Terrains', desc: 'Terrains constructibles, agricoles, lots pour promotion immobilière…', icon: <Map />, color: 'bg-orange-600', path: '/search?p=land' }
             ].map((cat, i) => (
-              <div key={i} className="bg-slate-50 p-10 rounded-[2.5rem] border border-transparent hover:border-slate-200 hover:bg-white hover:shadow-2xl transition-all duration-500 group cursor-pointer">
+              <Link to={cat.path} key={i} className="bg-slate-50 p-10 rounded-[2.5rem] border border-transparent hover:border-slate-200 hover:bg-white hover:shadow-2xl transition-all duration-500 group cursor-pointer">
                 <div className={`${cat.color} w-16 h-16 rounded-2xl flex items-center justify-center mb-8 text-white shadow-lg group-hover:scale-110 transition duration-500`}>
                   {cat.icon}
                 </div>
                 <h3 className="text-xl font-black mb-4 text-slate-900">{cat.title}</h3>
                 <p className="text-slate-500 text-sm leading-relaxed font-medium">{cat.desc}</p>
-              </div>
+              </Link>
             ))}
           </div>
-          <p className="text-center mt-12 text-slate-400 font-medium italic">Que vous soyez acheteur, locataire, investisseur ou professionnel, Dari vous aide à trouver le bien qui vous correspond.</p>
         </div>
       </section>
 
@@ -149,17 +171,17 @@ export const Home: React.FC = () => {
             {/* Path: Acheteurs */}
             <div className="bg-white p-12 rounded-[3rem] shadow-sm border border-slate-100">
               <h3 className="text-2xl font-black text-blue-600 uppercase tracking-widest mb-12 flex items-center">
-                <SearchCheck className="mr-3" size={32} /> Pour les acheteurs & locataires
+                <SearchCheck className="mr-3" size={32} /> Pour les acheteurs
               </h3>
               <div className="space-y-12">
                 {[
                   { title: "Étape 1 – Créez votre compte gratuitement", desc: "Inscrivez-vous en quelques secondes et recevez automatiquement 1 000 DA de solde de bienvenue.", icon: <UserPlus className="text-blue-500" /> },
                   { title: "Étape 2 – Recherchez votre bien", desc: "Filtrez par ville, type de bien, vente ou location, budget, surface, nombre de pièces, etc.", icon: <Search className="text-blue-500" /> },
-                  { title: "Étape 3 – Contactez le vendeur", desc: "Envoyez des messages via la messagerie Dari ou débloquez les numéros de téléphone grâce à votre solde ou avec un abonnement.", icon: <MessageCircle className="text-blue-500" /> },
-                  { title: "Étape 4 – Sauvegardez vos favoris", desc: "Gardez une trace des biens qui vous intéressent et soyez alerté dès qu’un bien similaire est publié.", icon: <Heart className="text-blue-500" /> }
+                  { title: "Étape 3 – Contactez le vendeur", desc: "Envoyez des messages via la messagerie Dari ou débloquez les numéros de téléphone grâce à votre solde.", icon: <MessageCircle className="text-blue-500" /> },
+                  { title: "Étape 4 – Sauvegardez vos favoris", desc: "Gardez une trace des biens qui vous intéressent et créez des alertes personnalisées.", icon: <Heart className="text-blue-500" /> }
                 ].map((step, i) => (
                   <div key={i} className="flex items-start space-x-6">
-                    <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                    <div className="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-inner">
                       {step.icon}
                     </div>
                     <div>
@@ -174,14 +196,14 @@ export const Home: React.FC = () => {
             {/* Path: Vendeurs */}
             <div className="bg-slate-900 p-12 rounded-[3rem] shadow-2xl text-white">
               <h3 className="text-2xl font-black text-blue-400 uppercase tracking-widest mb-12 flex items-center">
-                <Store className="mr-3" size={32} /> Pour les vendeurs & agences
+                <Store className="mr-3" size={32} /> Pour les vendeurs
               </h3>
               <div className="space-y-12">
                 {[
                   { title: "Étape 1 – Créez votre compte vendeur", desc: "Particulier ou professionnel, complétez votre profil en quelques clics.", icon: <UserPlus className="text-blue-400" /> },
-                  { title: "Étape 2 – Publiez vos annonces", desc: "Ajoutez vos appartements, maisons, commerces, bureaux ou terrains avec photos, description, prix et localisation.", icon: <PlusCircle className="text-blue-400" /> },
-                  { title: "Étape 3 – Boostez votre visibilité", desc: "Utilisez votre solde pour mettre vos annonces en avant et toucher plus de visiteurs.", icon: <TrendingUp className="text-blue-400" /> },
-                  { title: "Étape 4 – Gérez vos contacts", desc: "Recevez des messages et des appels directement. Suivez vos statistiques (vues, contacts, numéros affichés).", icon: <Star className="text-blue-400" /> }
+                  { title: "Étape 2 – Publiez vos annonces", desc: "Ajoutez vos biens avec photos, description générée par IA et localisation.", icon: <PlusCircle className="text-blue-400" /> },
+                  { title: "Étape 3 – Boostez votre visibilité", desc: "Utilisez votre solde pour mettre vos annonces en avant et toucher 5x plus de visiteurs.", icon: <TrendingUp className="text-blue-400" /> },
+                  { title: "Étape 4 – Gérez vos contacts", desc: "Recevez des messages et des appels directement. Suivez vos statistiques en temps réel.", icon: <Star className="text-blue-400" /> }
                 ].map((step, i) => (
                   <div key={i} className="flex items-start space-x-6">
                     <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -196,12 +218,6 @@ export const Home: React.FC = () => {
               </div>
             </div>
           </div>
-          
-          <div className="mt-20 text-center">
-            <Link to="/signup" className="px-12 py-5 bg-blue-600 text-white font-black rounded-2xl hover:bg-blue-700 transition shadow-2xl shadow-blue-200 inline-block active:scale-95">
-              Créer mon compte
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -213,7 +229,7 @@ export const Home: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
                {!isAuthenticated ? (
                  <>
-                   <Link to="/signup" className="w-full sm:w-auto px-12 py-5 bg-blue-600 text-white font-black rounded-2xl shadow-2xl shadow-blue-100 hover:bg-blue-700 transition active:scale-95">S'inscrire</Link>
+                   <Link to="/signup" className="w-full sm:w-auto px-12 py-5 bg-blue-600 text-white font-black rounded-2xl shadow-2xl shadow-blue-100 hover:bg-blue-700 transition active:scale-95">S'inscrire maintenant</Link>
                    <Link to="/login" className="w-full sm:w-auto px-12 py-5 bg-white text-slate-900 font-black rounded-2xl border border-slate-200 hover:bg-slate-50 transition shadow-sm active:scale-95">Se connecter</Link>
                  </>
                ) : (

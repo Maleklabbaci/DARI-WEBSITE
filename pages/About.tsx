@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { ShieldCheck, Users, Target, MapPin, BadgeCheck, CheckCircle2 } from 'lucide-react';
+/* Fix: Import Map icon from lucide-react and use an alias to avoid conflict with the global Map constructor */
+import { ShieldCheck, Users, Target, MapPin, BadgeCheck, CheckCircle2, Map as MapIcon } from 'lucide-react';
 
 export const About: React.FC = () => {
   return (
@@ -56,7 +57,8 @@ export const About: React.FC = () => {
           {[
             { icon: <ShieldCheck size={48} />, color: "text-green-600", title: "Transparence", desc: "Toutes nos annonces sont vérifiées pour garantir une qualité optimale et éviter les mauvaises surprises pour nos utilisateurs." },
             { icon: <Users size={48} />, color: "text-blue-600", title: "Communauté", desc: "Des milliers de particuliers et des centaines d'agences immobilières nous font confiance chaque jour partout en Algérie." },
-            { icon: <Map size={48} />, color: "text-orange-600", title: "Proximité", desc: "Nous couvrons les 58 wilayas, du littoral aux hauts plateaux en passant par le grand sud, pour ne rien rater." }
+            /* Fix: Use MapIcon instead of Map icon to avoid conflict with global Map constructor */
+            { icon: <MapIcon size={48} />, color: "text-orange-600", title: "Proximité", desc: "Nous couvrons les 58 wilayas, du littoral aux hauts plateaux en passant par le grand sud, pour ne rien rater." }
           ].map((card, i) => (
             <div key={i} className="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-xl hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 text-center flex flex-col items-center">
               <div className={`mb-8 p-6 bg-slate-50 rounded-[2rem] ${card.color} shadow-inner`}>{card.icon}</div>

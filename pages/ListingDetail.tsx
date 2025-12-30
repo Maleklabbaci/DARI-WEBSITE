@@ -7,11 +7,10 @@ import { useAuth } from '../context/AuthContext';
 
 export const ListingDetail: React.FC = () => {
   const { id } = useParams();
-  const { isAuthenticated, user, updateBalance, incrementPhoneUnlocks, stats } = useAuth();
+  const { isAuthenticated, user, updateBalance, incrementPhoneUnlocks, stats, isFavorite, toggleFavorite } = useAuth();
   const navigate = useNavigate();
   const property = MOCK_PROPERTIES.find(p => p.id === id);
   const [phoneState, setPhoneState] = useState<'hidden' | 'unlocking' | 'visible'>('hidden');
-  const [isFavorite, setIsFavorite] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   if (!property) {
@@ -51,6 +50,11 @@ export const ListingDetail: React.FC = () => {
       updateBalance(-200);
       setPhoneState('visible');
     }, 800);
+  };
+
+  const handleFavoriteToggle = () => {
+    if (!isAuthenticated) return navigate('/login');
+    toggleFavorite(property.id);
   };
 
   const getUnlockMessage = () => {
@@ -221,10 +225,10 @@ export const ListingDetail: React.FC = () => {
                   
                   <div className="flex items-center justify-center space-x-4 pt-6">
                     <button 
-                      onClick={() => setIsFavorite(!isFavorite)}
-                      className={`p-4 rounded-full transition-all duration-300 shadow-sm ${isFavorite ? 'bg-red-50 text-red-500 shadow-red-100 border border-red-100' : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-red-50 hover:text-red-500'}`}
+                      onClick={handleFavoriteToggle}
+                      className={`p-4 rounded-full transition-all duration-300 shadow-sm ${isFavorite(property.id) ? 'bg-red-50 text-red-500 shadow-red-100 border border-red-100' : 'bg-slate-50 text-slate-400 border border-slate-100 hover:bg-red-50 hover:text-red-500'}`}
                     >
-                      <Heart size={24} fill={isFavorite ? "currentColor" : "none"} />
+                      <Heart size={24} fill={isFavorite(property.id) ? "currentColor" : "none"} />
                     </button>
                     <button className="p-4 bg-slate-50 rounded-full text-slate-400 border border-slate-100 hover:text-blue-600 hover:bg-blue-50 transition-all shadow-sm">
                       <Share2 size={24} />

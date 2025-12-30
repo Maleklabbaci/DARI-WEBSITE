@@ -1,6 +1,15 @@
 
 export type UserType = 'individual' | 'agency';
 
+export interface Alert {
+  id: string;
+  type: PropertyType | 'all';
+  transaction: TransactionType;
+  wilaya: string;
+  priceMax?: number;
+  isActive: boolean;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -9,6 +18,8 @@ export interface User {
   balance: number;
   phone: string;
   subscription: 'free' | 'premium' | 'ultime';
+  favorites?: string[];
+  alerts?: Alert[];
 }
 
 export type TransactionType = 'buy' | 'rent';

@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, UserType } from '../types';
+import { User, UserType, Alert } from '../types';
 
 interface AuthContextType {
   user: User | null;
@@ -11,8 +11,13 @@ interface AuthContextType {
   updateBalance: (amount: number) => void;
   updateSubscription: (type: 'free' | 'premium' | 'ultime') => void;
   updateProfile: (data: Partial<User>) => void;
-  incrementPhoneUnlocks: () => boolean; // Returns true if free, false if needs payment
-  useBoost: () => boolean; // Returns true if boost used from sub, false if needs payment
+  toggleFavorite: (propertyId: string) => void;
+  isFavorite: (propertyId: string) => boolean;
+  addAlert: (alert: Omit<Alert, 'id' | 'isActive'>) => void;
+  toggleAlert: (alertId: string) => void;
+  removeAlert: (alertId: string) => void;
+  incrementPhoneUnlocks: () => boolean; 
+  useBoost: () => boolean;
   stats: {
     boostsRemaining: number;
     phoneUnlocksToday: number;
@@ -35,7 +40,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser);
       setUser(parsedUser);
-      // Mock loading subscription stats
       if (parsedUser.subscription === 'premium') setStats(s => ({ ...s, boostsRemaining: 2 }));
       if (parsedUser.subscription === 'ultime') setStats(s => ({ ...s, boostsRemaining: 10 }));
     }
@@ -53,7 +57,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             type: 'individual',
             balance: 1500,
             phone: '0550000000',
-            subscription: 'free'
+            subscription: 'free',
+            favorites: [],
+            alerts: [
+              { id: 'a1', type: 'apartment', transaction: 'buy', wilaya: 'Alger', isActive: true }
+            ]
           };
           setUser(mockUser);
           localStorage.setItem('dari_user', JSON.stringify(mockUser));
@@ -75,7 +83,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           type: userData.type,
           balance: 1000, 
           phone: userData.phone,
-          subscription: 'free'
+          subscription: 'free',
+          favorites: [],
+          alerts: []
         };
         setUser(newUser);
         localStorage.setItem('dari_user', JSON.stringify(newUser));
@@ -103,7 +113,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(updatedUser);
       localStorage.setItem('dari_user', JSON.stringify(updatedUser));
       
-      // Update simulated limits
       if (type === 'premium') setStats(s => ({ ...s, boostsRemaining: 2 }));
       else if (type === 'ultime') setStats(s => ({ ...s, boostsRemaining: 10 }));
       else setStats(s => ({ ...s, boostsRemaining: 0 }));
@@ -118,21 +127,72 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const toggleFavorite = (propertyId: string) => {
+    if (user) {
+      const favorites = user.favorites || [];
+      const isFav = favorites.includes(propertyId);
+      const newFavorites = isFav 
+        ? favorites.filter(id => id !== propertyId)
+        : [...favorites, propertyId];
+      
+      const updatedUser = { ...user, favorites: newFavorites };
+      setUser(updatedUser);
+      localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+    }
+  };
+
+  const isFavorite = (propertyId: string) => {
+    return user?.favorites?.includes(propertyId) || false;
+  };
+
+  const addAlert = (alertData: Omit<Alert, 'id' | 'isActive'>) => {
+    if (user) {
+      const newAlert: Alert = {
+        ...alertData,
+        id: Math.random().toString(36).substr(2, 9),
+        isActive: true
+      };
+      const updatedUser = { ...user, alerts: [...(user.alerts || []), newAlert] };
+      setUser(updatedUser);
+      localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+    }
+  };
+
+  const toggleAlert = (alertId: string) => {
+    if (user) {
+      const updatedAlerts = (user.alerts || []).map(a => 
+        a.id === alertId ? { ...a, isActive: !a.isActive } : a
+      );
+      const updatedUser = { ...user, alerts: updatedAlerts };
+      setUser(updatedUser);
+      localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+    }
+  };
+
+  const removeAlert = (alertId: string) => {
+    if (user) {
+      const updatedAlerts = (user.alerts || []).filter(a => a.id !== alertId);
+      const updatedUser = { ...user, alerts: updatedAlerts };
+      setUser(updatedUser);
+      localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+    }
+  };
+
   const incrementPhoneUnlocks = () => {
-    if (user?.subscription !== 'free') return true; // Unlimited
+    if (user?.subscription !== 'free') return true; 
     if (stats.phoneUnlocksToday < 3) {
       setStats(s => ({ ...s, phoneUnlocksToday: s.phoneUnlocksToday + 1 }));
-      return true; // Use free daily slot
+      return true;
     }
-    return false; // Requires payment
+    return false;
   };
 
   const useBoost = () => {
     if (stats.boostsRemaining > 0) {
       setStats(s => ({ ...s, boostsRemaining: s.boostsRemaining - 1 }));
-      return true; // Used included boost
+      return true;
     }
-    return false; // Requires payment
+    return false;
   };
 
   return (
@@ -145,6 +205,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       updateBalance, 
       updateSubscription, 
       updateProfile,
+      toggleFavorite,
+      isFavorite,
+      addAlert,
+      toggleAlert,
+      removeAlert,
       incrementPhoneUnlocks,
       useBoost,
       stats,
