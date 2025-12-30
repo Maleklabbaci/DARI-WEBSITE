@@ -8,8 +8,15 @@ export const generateDescription = async (details: {
   location: string;
   features: string[];
 }) => {
-  // Correctly initialize GoogleGenAI following @google/genai guidelines
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  // Initialisation à l'intérieur de la fonction pour éviter le crash au chargement du module
+  // si process.env n'est pas encore défini dans le contexte global du navigateur.
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    console.warn("API_KEY non trouvée dans process.env");
+    return "Configuration manquante pour la génération IA.";
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
   
   const prompt = `Génère une description accrocheuse et professionnelle en français pour une annonce immobilière en Algérie avec les détails suivants :
     Type: ${details.type}

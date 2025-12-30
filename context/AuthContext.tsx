@@ -36,12 +36,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('dari_user');
-    if (savedUser) {
-      const parsedUser = JSON.parse(savedUser);
-      setUser(parsedUser);
-      if (parsedUser.subscription === 'premium') setStats(s => ({ ...s, boostsRemaining: 2 }));
-      if (parsedUser.subscription === 'ultime') setStats(s => ({ ...s, boostsRemaining: 10 }));
+    try {
+      const savedUser = localStorage.getItem('dari_user');
+      if (savedUser) {
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
+        if (parsedUser.subscription === 'premium') setStats(s => ({ ...s, boostsRemaining: 2 }));
+        if (parsedUser.subscription === 'ultime') setStats(s => ({ ...s, boostsRemaining: 10 }));
+      }
+    } catch (e) {
+      console.warn("Erreur lors de l'accès au localStorage:", e);
     }
     setIsLoading(false);
   }, []);
@@ -64,7 +68,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             ]
           };
           setUser(mockUser);
-          localStorage.setItem('dari_user', JSON.stringify(mockUser));
+          try {
+            localStorage.setItem('dari_user', JSON.stringify(mockUser));
+          } catch (e) {}
           resolve();
         } else {
           reject(new Error("Identifiants incorrects"));
@@ -88,7 +94,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           alerts: []
         };
         setUser(newUser);
-        localStorage.setItem('dari_user', JSON.stringify(newUser));
+        try {
+          localStorage.setItem('dari_user', JSON.stringify(newUser));
+        } catch (e) {}
         resolve();
       }, 1000);
     });
@@ -96,14 +104,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('dari_user');
+    try {
+      localStorage.removeItem('dari_user');
+    } catch (e) {}
   };
 
   const updateBalance = (amount: number) => {
     if (user) {
       const updatedUser = { ...user, balance: user.balance + amount };
       setUser(updatedUser);
-      localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      try {
+        localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      } catch (e) {}
     }
   };
 
@@ -111,7 +123,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (user) {
       const updatedUser = { ...user, subscription: type };
       setUser(updatedUser);
-      localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      try {
+        localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      } catch (e) {}
       
       if (type === 'premium') setStats(s => ({ ...s, boostsRemaining: 2 }));
       else if (type === 'ultime') setStats(s => ({ ...s, boostsRemaining: 10 }));
@@ -123,7 +137,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (user) {
       const updatedUser = { ...user, ...data };
       setUser(updatedUser);
-      localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      try {
+        localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      } catch (e) {}
     }
   };
 
@@ -137,7 +153,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       const updatedUser = { ...user, favorites: newFavorites };
       setUser(updatedUser);
-      localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      try {
+        localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      } catch (e) {}
     }
   };
 
@@ -154,7 +172,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       };
       const updatedUser = { ...user, alerts: [...(user.alerts || []), newAlert] };
       setUser(updatedUser);
-      localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      try {
+        localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      } catch (e) {}
     }
   };
 
@@ -165,7 +185,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       );
       const updatedUser = { ...user, alerts: updatedAlerts };
       setUser(updatedUser);
-      localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      try {
+        localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      } catch (e) {}
     }
   };
 
@@ -174,7 +196,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const updatedAlerts = (user.alerts || []).filter(a => a.id !== alertId);
       const updatedUser = { ...user, alerts: updatedAlerts };
       setUser(updatedUser);
-      localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      try {
+        localStorage.setItem('dari_user', JSON.stringify(updatedUser));
+      } catch (e) {}
     }
   };
 
