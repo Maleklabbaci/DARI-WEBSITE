@@ -1,5 +1,6 @@
 
 export type UserType = 'individual' | 'agency';
+export type Language = 'fr' | 'ar' | 'en';
 
 export interface Alert {
   id: string;
@@ -20,6 +21,24 @@ export interface User {
   subscription: 'free' | 'premium' | 'ultime';
   favorites?: string[];
   alerts?: Alert[];
+  whatsapp?: string;
+  city?: string;
+  wilaya?: string;
+  isVerified?: boolean;
+  language?: Language | 'both';
+  notifications?: {
+    email: boolean;
+    sms: boolean;
+    news: boolean;
+  };
+  agencyName?: string;
+  agencyPhone?: string;
+  agencyWhatsapp?: string;
+  agencyAddress?: string;
+  openingHours?: string;
+  facebook?: string;
+  instagram?: string;
+  website?: string;
 }
 
 export type TransactionType = 'buy' | 'rent';
@@ -35,6 +54,8 @@ export interface Property {
   transaction: TransactionType;
   city: string;
   wilaya: string;
+  lat?: number;
+  lng?: number;
   rooms?: number;
   bedrooms?: number;
   floor?: number;

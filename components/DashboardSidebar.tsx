@@ -3,6 +3,7 @@ import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LayoutDashboard, List, BarChart3, Wallet, MessageSquare, CreditCard, User, LogOut, Heart, Bell } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useLanguage } from '../context/LanguageContext';
 
 interface SidebarItemProps {
   icon: React.ReactNode;
@@ -14,19 +15,20 @@ interface SidebarItemProps {
 const SidebarItem: React.FC<SidebarItemProps> = ({ icon, label, path, active }) => (
   <Link 
     to={path}
-    className={`flex items-center space-x-3 px-4 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm ${
+    className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl transition-all duration-300 font-bold text-sm ${
       active 
-        ? 'bg-blue-600 text-white shadow-xl shadow-blue-100 translate-x-1' 
-        : 'text-slate-500 hover:bg-slate-50 hover:text-blue-600 hover:translate-x-1'
+        ? 'bg-blue-600 text-white shadow-xl shadow-blue-100 translate-x-1 rtl:-translate-x-1' 
+        : 'text-slate-500 hover:bg-slate-50 hover:text-blue-600 hover:translate-x-1 rtl:hover:-translate-x-1'
     }`}
   >
-    <span className={active ? 'text-white' : 'text-slate-400'}>{icon}</span>
-    <span>{label}</span>
+    <span className={`${active ? 'text-white' : 'text-slate-400'} flex-shrink-0`}>{icon}</span>
+    <span className="flex-grow text-start">{label}</span>
   </Link>
 );
 
 export const DashboardSidebar: React.FC = () => {
   const { user, logout } = useAuth();
+  const { language, t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -34,19 +36,19 @@ export const DashboardSidebar: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate(`/${language}/`);
   };
 
   const menuItems = [
-    { icon: <LayoutDashboard size={20} />, label: "Tableau de bord", path: "/dashboard" },
-    { icon: <List size={20} />, label: "Mes annonces", path: "/dashboard/ads" },
-    { icon: <Heart size={20} />, label: "Mes favoris", path: "/dashboard/favorites" },
-    { icon: <Bell size={20} />, label: "Mes alertes", path: "/dashboard/alerts" },
-    { icon: <BarChart3 size={20} />, label: "Analyses", path: "/dashboard/analytics" },
-    { icon: <Wallet size={20} />, label: "Mon solde", path: "/dashboard/balance" },
-    { icon: <MessageSquare size={20} />, label: "Messagerie", path: "/dashboard/messages" },
-    { icon: <CreditCard size={20} />, label: "Abonnement", path: "/dashboard/subscription" },
-    { icon: <User size={20} />, label: "Mon profil", path: "/dashboard/profile" },
+    { icon: <LayoutDashboard size={20} />, label: t('dashboard.menu.home'), path: `/${language}/dashboard` },
+    { icon: <List size={20} />, label: t('dashboard.menu.ads'), path: `/${language}/dashboard/ads` },
+    { icon: <Heart size={20} />, label: t('dashboard.menu.favs'), path: `/${language}/dashboard/favorites` },
+    { icon: <Bell size={20} />, label: t('dashboard.menu.alerts'), path: `/${language}/dashboard/alerts` },
+    { icon: <BarChart3 size={20} />, label: t('dashboard.menu.stats'), path: `/${language}/dashboard/analytics` },
+    { icon: <Wallet size={20} />, label: t('dashboard.menu.wallet'), path: `/${language}/dashboard/balance` },
+    { icon: <MessageSquare size={20} />, label: t('dashboard.menu.chat'), path: `/${language}/dashboard/messages` },
+    { icon: <CreditCard size={20} />, label: t('dashboard.menu.sub'), path: `/${language}/dashboard/subscription` },
+    { icon: <User size={20} />, label: t('dashboard.menu.profile'), path: `/${language}/dashboard/profile` },
   ];
 
   return (
@@ -76,10 +78,10 @@ export const DashboardSidebar: React.FC = () => {
           <div className="pt-6 mt-6 border-t border-slate-50">
             <button 
               onClick={handleLogout}
-              className="flex items-center space-x-3 px-4 py-3.5 rounded-2xl w-full text-red-500 hover:bg-red-50 transition-all font-bold text-sm group"
+              className="flex items-center gap-3 px-4 py-3.5 rounded-2xl w-full text-red-500 hover:bg-red-50 transition-all font-bold text-sm group"
             >
-              <LogOut size={20} className="group-hover:-translate-x-1 transition-transform" />
-              <span>Déconnexion</span>
+              <LogOut size={20} className="group-hover:-translate-x-1 rtl:group-hover:translate-x-1 transition-transform" />
+              <span className="flex-grow text-start">{t('header.logout')}</span>
             </button>
           </div>
         </nav>
