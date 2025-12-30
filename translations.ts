@@ -16,7 +16,8 @@ export const translations: Record<Language, any> = {
       wilaya: "Wilaya",
       city: "Ville / Commune",
       allTypes: "Tous types",
-      searchPlaceholder: "Ville ou wilaya"
+      searchPlaceholder: "Ville ou wilaya",
+      roomsUnit: "p."
     },
     header: {
       buy: "Acheter",
@@ -50,8 +51,14 @@ export const translations: Record<Language, any> = {
       forgotPassword: "Mot de passe oublié ?",
       rememberMe: "Se souvenir de moi",
       submitLogin: "Se connecter",
-      submitSignup: "Créer mon compte"
+      submitSignup: "Créer mon compte",
+      connecting: "Connexion en cours...",
+      disconnecting: "Déconnexion...",
+      creating: "Création de votre compte...",
+      welcome: "Bienvenue sur Dari !",
+      goodbye: "À bientôt sur Dari !"
     },
+    // ... reste des traductions inchangé
     home: {
       heroTitle: "Bienvenue sur Dari – Votre plateforme immobilière en Algérie",
       heroDesc: "Achetez, louez ou publiez vos appartements, maisons et terrains partout en Algérie.",
@@ -127,7 +134,10 @@ export const translations: Record<Language, any> = {
       heating: "Chauffage",
       publishBtn: "Publier l'annonce",
       boostTitle: "Booster ma visibilité",
-      boostDesc: "Placez votre annonce en tête de liste pour 7 jours."
+      boostDesc: "Placez votre annonce en tête de liste pour 7 jours.",
+      addPhotos: "Ajouter des photos",
+      photosDesc: "Minimum 1 photo pour garantir la qualité de votre annonce.",
+      browseFiles: "Parcourir mes fichiers"
     },
     dashboard: {
       hello: "Bonjour,",
@@ -136,6 +146,24 @@ export const translations: Record<Language, any> = {
       activeAds: "Annonces actives",
       messages: "Messages non lus",
       postAd: "Déposer une annonce",
+      bonusActive: "Bonus Dari actif",
+      actionRequired: "Action requise",
+      statsTitle: "Statistiques de performance",
+      statsSubtitle: "Impact de vos annonces sur Dari",
+      noData: "Pas encore assez de données",
+      noDataDesc: "Boostez la visibilité de vos annonces pour voir vos statistiques s'envoler.",
+      table: {
+        item: "Bien & localisation",
+        typePrice: "Type & prix",
+        status: "Statut",
+        performance: "Performance",
+        actions: "Actions"
+      },
+      status: {
+        active: "Actif",
+        paused: "En pause",
+        expired: "Expiré"
+      },
       menu: {
         home: "Tableau de bord",
         ads: "Mes annonces",
@@ -185,7 +213,8 @@ export const translations: Record<Language, any> = {
       wilaya: "الولاية",
       city: "البلدية / المدينة",
       allTypes: "كل الأنواع",
-      searchPlaceholder: "المدينة أو الولاية"
+      searchPlaceholder: "المدينة أو الولاية",
+      roomsUnit: "غ."
     },
     header: {
       buy: "شراء",
@@ -219,7 +248,12 @@ export const translations: Record<Language, any> = {
       forgotPassword: "نسيت كلمة المرور؟",
       rememberMe: "تذكرني",
       submitLogin: "دخول",
-      submitSignup: "إنشاء الحساب"
+      submitSignup: "إنشاء الحساب",
+      connecting: "جاري الدخول...",
+      disconnecting: "جاري الخروج...",
+      creating: "جاري إنشاء حسابك...",
+      welcome: "مرحباً بك في داري!",
+      goodbye: "إلى اللقاء في داري!"
     },
     home: {
       heroTitle: "مرحباً بك في داري – منصتك العقارية في الجزائر",
@@ -296,7 +330,10 @@ export const translations: Record<Language, any> = {
       heating: "تدفئة",
       publishBtn: "نشر الإعلان",
       boostTitle: "زيادة الظهور",
-      boostDesc: "ضع إعلانك في أعلى القائمة لمدة 7 أيام."
+      boostDesc: "ضع إعلانك في أعلى القائمة لمدة 7 أيام.",
+      addPhotos: "إضافة صور",
+      photosDesc: "صورة واحدة على الأقل لضمان جودة إعلانك.",
+      browseFiles: "تصفح ملفاتي"
     },
     dashboard: {
       hello: "مرحباً،",
@@ -305,6 +342,24 @@ export const translations: Record<Language, any> = {
       activeAds: "إعلانات نشطة",
       messages: "رسائل غير مقروءة",
       postAd: "نشر إعلان",
+      bonusActive: "مكافأة داري نشطة",
+      actionRequired: "مطلوب اتخاذ إجراء",
+      statsTitle: "إحصائيات الأداء",
+      statsSubtitle: "تأثير إعلاناتك على داري",
+      noData: "لا توجد بيانات كافية بعد",
+      noDataDesc: "عزز ظهور إعلاناتك لترى إحصائياتك ترتفع.",
+      table: {
+        item: "العقار والموقع",
+        typePrice: "النوع والسعر",
+        status: "الحالة",
+        performance: "الأداء",
+        actions: "الإجراءات"
+      },
+      status: {
+        active: "نشط",
+        paused: "متوقف مؤقتاً",
+        expired: "منتهي"
+      },
       menu: {
         home: "لوحة التحكم",
         ads: "إعلاناتي",
@@ -354,7 +409,8 @@ export const translations: Record<Language, any> = {
       wilaya: "Wilaya",
       city: "City / Town",
       allTypes: "All types",
-      searchPlaceholder: "City or Wilaya"
+      searchPlaceholder: "City or Wilaya",
+      roomsUnit: "r."
     },
     header: {
       buy: "Buy",
@@ -388,7 +444,12 @@ export const translations: Record<Language, any> = {
       forgotPassword: "Forgot password?",
       rememberMe: "Remember me",
       submitLogin: "Login",
-      submitSignup: "Create my account"
+      submitSignup: "Create my account",
+      connecting: "Logging in...",
+      disconnecting: "Logging out...",
+      creating: "Creating your account...",
+      welcome: "Welcome to Dari!",
+      goodbye: "See you soon on Dari!"
     },
     home: {
       heroTitle: "Welcome to Dari – Your real estate platform in Algeria",
@@ -465,7 +526,10 @@ export const translations: Record<Language, any> = {
       heating: "Heating",
       publishBtn: "Publish Ad",
       boostTitle: "Boost Visibility",
-      boostDesc: "Place your ad at the top of the list for 7 days."
+      boostDesc: "Place your ad at the top of the list for 7 days.",
+      addPhotos: "Add photos",
+      photosDesc: "Minimum 1 photo to ensure ad quality.",
+      browseFiles: "Browse files"
     },
     dashboard: {
       hello: "Hello,",

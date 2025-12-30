@@ -23,6 +23,7 @@ interface AuthContextType {
     phoneUnlocksToday: number;
   };
   isLoading: boolean;
+  isAuthTransitioning: 'login' | 'logout' | 'signup' | 'success' | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,6 +31,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthTransitioning, setIsAuthTransitioning] = useState<'login' | 'logout' | 'signup' | 'success' | null>(null);
   const [stats, setStats] = useState({
     boostsRemaining: 0,
     phoneUnlocksToday: 0
@@ -51,6 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string) => {
+    setIsAuthTransitioning('login');
     return new Promise<void>((resolve, reject) => {
       setTimeout(() => {
         if (email && password.length >= 6) {
@@ -71,15 +74,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           try {
             localStorage.setItem('dari_user', JSON.stringify(mockUser));
           } catch (e) {}
-          resolve();
+          setIsAuthTransitioning('success');
+          setTimeout(() => {
+            setIsAuthTransitioning(null);
+            resolve();
+          }, 1500);
         } else {
+          setIsAuthTransitioning(null);
           reject(new Error("Identifiants incorrects"));
         }
-      }, 800);
+      }, 1200);
     });
   };
 
   const signup = async (userData: any) => {
+    setIsAuthTransitioning('signup');
     return new Promise<void>((resolve) => {
       setTimeout(() => {
         const newUser: User = {
@@ -97,16 +106,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
           localStorage.setItem('dari_user', JSON.stringify(newUser));
         } catch (e) {}
-        resolve();
-      }, 1000);
+        setIsAuthTransitioning('success');
+        setTimeout(() => {
+          setIsAuthTransitioning(null);
+          resolve();
+        }, 1500);
+      }, 1500);
     });
   };
 
   const logout = () => {
-    setUser(null);
-    try {
-      localStorage.removeItem('dari_user');
-    } catch (e) {}
+    setIsAuthTransitioning('logout');
+    setTimeout(() => {
+      setUser(null);
+      try {
+        localStorage.removeItem('dari_user');
+      } catch (e) {}
+      setIsAuthTransitioning('success');
+      setTimeout(() => setIsAuthTransitioning(null), 1000);
+    }, 800);
   };
 
   const updateBalance = (amount: number) => {
@@ -237,7 +255,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       incrementPhoneUnlocks,
       useBoost,
       stats,
-      isLoading 
+      isLoading,
+      isAuthTransitioning
     }}>
       {children}
     </AuthContext.Provider>
